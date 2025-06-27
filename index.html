@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dipak Patil - Python Developer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="shortcut icon" href="./icon.png" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #00d4ff;
+            --secondary-color: #ff6b6b;
+            --accent-color: #4ecdc4;
+            --bg-dark: #0a0a0a;
+            --bg-card: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: var(--gradient-3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .hero-text .subtitle {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            animation: slideInLeft 1s ease-out 0.2s both;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            animation: slideInLeft 1s ease-out 0.4s both;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            animation: slideInLeft 1s ease-out 0.6s both;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--gradient-3);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .hero-photo {
+            position: relative;
+            animation: slideInRight 1s ease-out;
+        }
+
+        .photo-container {
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto;
+            position: relative;
+            border: 4px solid transparent;
+            background: var(--primary-color);
+            padding: 4px;
+        }
+
+        .photo-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* 3D Background */
+        #three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Sections */
+        .section {
+            padding: 5rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .skill-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .skill-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--gradient-3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Education & Certifications */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--gradient-1);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 4px solid var(--primary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            transform: translateX(10px);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 2rem;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 50%;
+        }
+
+        /* Projects */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .project-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            position: relative;
+            
+            
+        }
+
+        .project-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .project-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .project-links a:hover::after {
+            width: 100%;
+        }
+
+       /* .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+       }*/
+
+        .project-image {
+            height: 200px;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .project-content {
+            padding: 2rem;
+        }
+
+        .project-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .tech-tag {
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--primary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .project-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-link:hover {
+            opacity: 0.7;
+        }
+        
+
+        /* Contact Form */
+        .contact-form {
+            max-width: 600px;
+            margin: 2rem auto;
+            background: var(--bg-card);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
+        }
+
+        /* Animations */
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+                padding: 2rem 1rem;
+            }
+
+            .hero-photo,
+            .photo-container {
+                width: 180px !important;
+                height: 180px !important;
+                margin: 0 auto;
+            }
+
+            .photo-inner,
+            .profile-image {
+                width: 100% !important;
+                height: 100% !important;
+                border-radius: 50%;
+            }
+
+            .hero-text h1 {
+                font-size: 2rem;
+                word-break: break-word;
+            }
+
+            .hero-text .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero-text p {
+                font-size: 1rem;
+                padding: 0 0.5rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .skills-grid,
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .btn-fullwidth {
+            width: 100%;
+        }
+
+        .contact-info {
+            text-align: center;
+            margin-top: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .centered-margin-top {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        body, img, .profile-image, .photo-inner, .hero-photo, .photo-container, pre, code {
+            -webkit-user-select: none; /* Chrome/Safari */
+            -moz-user-select: none;    /* Firefox */
+            -ms-user-select: none;     /* IE10+ */
+            user-select: none;         /* Standard */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">Dipak Patil</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#education">Education</a></li>
+                <li><a href="#resume">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <canvas id="three-canvas"></canvas>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Dipak Patil</h1>
+                <div class="subtitle">Python Development | Data Science</div>
+                <p>Python Developer with a strong grasp of Data Science, skilled in backend development, machine learning, and data-driven solutions using Django, Flask, Python-based ML tools, frameworks and API integration. <br><b> Contact: dipakpatil4386@gmail.com</b></p>
+                <div class="cta-buttons">
+                    <a href="#projects" class="btn btn-primary">View Projects</a>
+                    <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                    <a href="https://drive.google.com/file/d/1gEV-FHUy-ZLJQOTQaR3pysOmOe8mi-IY/view?usp=sharing" target="_blank" rel="noopener" class="btn btn-secondary"> View Resume</a>
+                </div>
+            </div>
+            <div class="hero-photo">
+                <div class="photo-container">
+                    <div class="photo-inner">
+                        <img src="./dipak.jpg" alt="Dipak Patil" class="profile-image" oncontextmenu="return false;" draggable="false">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section">
+        <h2 class="section-title">Technical Skills</h2>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <div class="skill-icon">🐍</div>
+                <h3>Python</h3>
+                <p> Proficiency in Python, OOP, and functional programming</p>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">🌐</div>
+                <h3>Web Frameworks</h3>
+                <p>Flask, FastAPI for building robust web applications</p>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">🗄️</div>
+                <h3>Databases</h3>
+                <p>PostgreSQL, MySQL, MongoDB for data management</p>
+            </div>
+            <!--<div class="skill-card">
+                <div class="skill-icon">☁️</div>
+                <h3>Cloud & DevOps</h3>
+                <p>AWS, Docker, Kubernetes, CI/CD pipelines</p>
+            </div>-->
+            <div class="skill-card">
+                <div class="skill-icon">🤖</div>
+                <h3>Machine Learning</h3>
+                <p>Scikit-learn, TensorFlow, Pandas, NumPy for data science</p>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">🔧</div>
+                <h3>Tools & Others</h3>
+                <p>Git, Linux, REST APIs, Microservices, Testing, Jupyter Notebook</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="section">
+        <h2 class="section-title">Education</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <h3>Bachelor of Engineering in Artificial Intelligence and Data Science | CGPA: 8.17</h3>
+                <h4>Konkan Gyanpeeth College of Engineering(University of Mumbai),Karjat</h4>
+                <p><strong>2021-2025 </strong></p>
+                <p>Completed Bachelor of Engineering in Artificial Intelligence and Data Science with a focus on machine learning, data analytics, and intelligent systems.</p>
+            </div>
+            <div class="timeline-item">
+                <h3>XII(PCMB) | Percentage: 81.50%</h3>
+                <h4>S. M. Lohiya Junior College,Kolhapur</h4>
+                <p><strong>2020-2021</strong></p>
+                <p>Completed my higher secondary education with a focus on mathematics, physics, chemistry and biology.</p>
+            </div>
+            <div class="timeline-item">
+                <h3>X</h3>
+                <h4>R. B. Patil Highschool, Kolhapur</h4>
+                <p><strong>2018-2019</strong></p>
+                <p>Completed my secondary education with a focus on mathematics, physics, chemistry,biology, english and various other regional subjects.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resume Section -->
+    <section id="resume" class="section">
+        <h2 class="section-title">Work Experience</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <h3>Python Developer Intern</h3>
+                <h4>CodeSpeedy Technology</h4>
+                <p><strong>Dec 2024 - Feb 2025</strong></p>
+                <p>Developed a python application for a client to automate the process of generating invoices and sending them to the clients.</p>
+            </div>
+            <div class="timeline-item">
+                <h3>Python Engineer Intern</h3>
+                <h4>CodSoft Solutions Pvt. Ltd.</h4>
+                <p><strong>Oct 2024 - Dec 2024</strong></p>
+                <p>Developed a python application for a client to automate the process of data entry and sending them to the clients also helped to review code so it helped to increase code readability an accuracy.</p>
+            </div>
+            <div class="timeline-item">
+                <h3>Data Science Intern</h3>
+                <h4>Prodigy Infotech</h4>
+                <p><strong>June 2024 - July 2024</strong></p>
+                <p>Worked on a project to predict the price of a house using machine learning and data science. I used the dataset from kaggle and applied various machine learning algorithms to predict the price of a house..</p>
+            </div>
+        </div>
+        <div class="centered-margin-top">
+            <a href="https://drive.google.com/file/d/1gEV-FHUy-ZLJQOTQaR3pysOmOe8mi-IY/view?usp=sharing" target="_blank" rel="noopener" class="btn btn-primary">Download Full Resume</a>
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section id="certifications" class="section">
+        <h2 class="section-title">Certifications</h2>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <div class="skill-icon">📊</div>
+                <h3>AI Engineering</h3>
+                <p>Oneroadmap - 2025</p>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">🏆</div>
+                <h3>Google Analytics</h3>
+                <p>Google - 2024</p>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">🎓</div>
+                <h3>Microsoft Generative AI</h3>
+                <p>Microsoft - 2024</p>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">🔒</div>
+                <h3>Accenture Data Analytics</h3>
+                <p>Accenture - 2023</p>
+            </div>
+           
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+        <h2 class="section-title">Featured Projects</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-image">Autonomous Data Cleaning Agent</div>
+                <div class="project-content">
+                    <h3 class="project-title">Autonomous Data Cleaning Agent</h3>
+                    <p>An autonomous data cleaning agent developed in Python that automates the preprocessing of datasets by detecting and handling missing values, outliers, duplicates, and inconsistent formats using rule-based logic and machine learning techniques, improving data quality for analysis and modeling..</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Pandas</span>
+                        <span class="tech-tag">NumPy</span>
+                        <span class="tech-tag">Scikit-learn</span>
+                        <span class="tech-tag">Metplotlib</span>
+                        <span class="tech-tag">PyOD</span>
+                        <span class="tech-tag">Flask</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/dipakpatil4386/data_cleaning_tool" target="_blank" rel="noopener" class="project-link">Live Demo</a>
+                        <a href="https://github.com/dipakpatil4386/data_cleaning_tool" target="_blank" rel="noopener" class="project-link">GitHub</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image">JobRes.ai</div>
+                <div class="project-content">
+                    <h3 class="project-title">JobRes.ai - automated resume checker and job recommendation </h3>
+                    <p>An AI-integrated resume checker and job recommender system built in Python using NLP (spaCy, transformers), Scikit-learn, and Flask. It analyzes resumes, evaluates skill-job match, provides feedback, and recommends suitable job roles based on semantic similarity and user profile..</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">NLP</span>
+                        <span class="tech-tag">PyPDF2</span>
+                        <span class="tech-tag">Scikit-learn</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/dipakpatil4386/jobresai" target="_blank" rel="noopener" class="project-link">Live Demo</a>
+                        <a href="https://github.com/dipakpatil4386/jobresai" target="_blank" rel="noopener" class="project-link">GitHub</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image">ProfitFeast</div>
+                <div class="project-content">
+                    <h3 class="project-title">ProfitFeast - MERN based Food ordering with ML automation</h3>
+                    <p>A full-stack food ordering system built using the MERN stack (MongoDB, Express.js, React, Node.js) with integrated machine learning, leveraging the KNN algorithm to provide personalized food recommendations based on user preferences and order historys.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">React.js</span>
+                        <span class="tech-tag">MongoDB</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Scikit-learn</span>
+                        <span class="tech-tag">Pandas</span>
+                        <span class="tech-tag">NumPy</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/dipakpatil4386/ProfitFeast_food_delivery_app" target="_blank" rel="noopener" class="project-link">Live Demo</a>
+                        <a href="https://github.com/dipakpatil4386/ProfitFeast_food_delivery_app" target="_blank" rel="noopener" class="project-link">GitHub</a>
+                    </div>
+                </div>
+            </div>
+
+          <!--  <div class="project-card">
+                <div class="project-image">Data Pipeline</div>
+                <div class="project-content">
+                    <h3 class="project-title">ETL Data Pipeline</h3>
+                    <p>Automated data pipeline for processing large datasets. Extracts data from multiple sources, transforms it using Python, and loads into data warehouse for analytics.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Apache Airflow</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">AWS S3</span>
+                        <span class="tech-tag">Snowflake</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="project-link">Documentation</a>
+                        <a href="#" class="project-link">GitHub</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image">ChatBot AI</div>
+                <div class="project-content">
+                    <h3 class="project-title">AI-Powered Chatbot</h3>
+                    <p>Intelligent chatbot using natural language processing. Built with Python, TensorFlow, and deployed on AWS Lambda with webhook integration.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">TensorFlow</span>
+                        <span class="tech-tag">NLTK</span>
+                        <span class="tech-tag">AWS Lambda</span>
+                        <span class="tech-tag">Telegram API</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="project-link">Try Bot</a>
+                        <a href="#" class="project-link">GitHub</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image">Web Scraper</div>
+                <div class="project-content">
+                    <h3 class="project-title">Distributed Web Scraper</h3>
+                    <p>High-performance web scraping framework with proxy rotation, rate limiting, and data validation. Capable of scraping millions of pages efficiently.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Scrapy</span>
+                        <span class="tech-tag">Selenium</span>
+                        <span class="tech-tag">MySQL</span>
+                        <span class="tech-tag">Celery</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="project-link">Documentation</a>
+                        <a href="#" class="project-link">GitHub</a>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <h2 class="section-title">Get In Touch</h2>
+        <form class="contact-form" id="contactForm">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" name="subject" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="6" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-fullwidth">Send Message</button>
+        </form>
+        
+        <div class="contact-info">
+            <p>📧 mail: dipakpatil4386@email.com | 📱 Instagram: https://www.instagram.com/patil_.dipak</p>
+            <p>🌐 LinkedIn: linkedin.com/in/dipakpatil4386 | 💻 GitHub: github.com/dipakpatil4386</p>
+        </div>
+    </section>
+
+    <script>
+        // Three.js 3D Background
+        let scene, camera, renderer, particles;
+
+        function initThree() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // Create particles
+            const geometry = new THREE.BufferGeometry();
+            const positions = [];
+            const colors = [];
+
+            for (let i = 0; i < 1000; i++) {
+                positions.push(Math.random() * 2000 - 1000);
+                positions.push(Math.random() * 2000 - 1000);
+                positions.push(Math.random() * 2000 - 1000);
+
+                colors.push(Math.random());
+                colors.push(Math.random());
+                colors.push(1);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({ size: 2, vertexColors: true });
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            camera.position.z = 1000;
+
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            particles.rotation.x += 0.0005;
+            particles.rotation.y += 0.001;
+            
+            renderer.render(scene, camera);
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(10, 10, 10, 0.98)';
+            } else {
+                navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+            }
+        });
+
+        // Form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Collect form data
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const subject = document.getElementById('subject').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            // Simple validation (optional, since HTML5 required is used)
+            if (!name || !email || !subject || !message) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            // Show a success message (replace with actual backend call if needed)
+            alert('Thank you for your time, please contact via email directly, sorry for inconvenience.');
+
+            // Optionally, reset the form
+            document.getElementById('contactForm').reset();
+        });
+
+        // Disable right-click on images
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault();
+            }
+        });
+
+        // Disable drag on images
+        document.querySelectorAll('img').forEach(img => {
+            img.setAttribute('draggable', 'false');
+        });
+
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+        });
+        document.addEventListener('cut', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
