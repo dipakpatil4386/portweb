@@ -1097,6 +1097,17 @@ footer {
     background: rgba(0, 0, 0, 0.05);
 }
 
+/* Light Mode Button Outline */
+[data-theme="light"] .btn-outline {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+[data-theme="light"] .btn-outline:hover {
+    background: rgba(14, 165, 233, 0.08);
+    border-color: var(--primary);
+}
+
 /* Scroll to Top Button */
 .scroll-to-top {
     position: fixed;
