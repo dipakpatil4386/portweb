@@ -104,7 +104,9 @@ document.getElementById('contactForm').addEventListener('submit', function (e) {
         btn.style.background = "#10b981"; // success green
         btn.style.boxShadow = "0 4px 15px rgba(16, 185, 129, 0.4)";
 
-        alert('Thank you for reaching out! Since this is a static site, please email directly at dipakpatil4386@gmail.com.');
+        // Show Custom Alert Dialog
+        const customAlert = document.getElementById('customAlert');
+        customAlert.classList.add('active');
 
         this.reset();
         setTimeout(() => {
@@ -113,6 +115,11 @@ document.getElementById('contactForm').addEventListener('submit', function (e) {
             btn.style.boxShadow = "0 4px 20px rgba(56, 189, 248, 0.25)";
         }, 3000);
     }, 800);
+});
+
+// Custom Alert Close Logic
+document.getElementById('closeAlertBtn').addEventListener('click', () => {
+    document.getElementById('customAlert').classList.remove('active');
 });
 
 // Theme Toggle Logic
