@@ -125,14 +125,14 @@ document.getElementById('closeAlertBtn').addEventListener('click', () => {
 // Theme Toggle Logic
 const themeToggle = document.getElementById('themeToggle');
 const themeIcon = document.getElementById('themeIcon');
-const currentTheme = localStorage.getItem('theme');
+const currentTheme = localStorage.getItem('theme') || 'dark';
 
-// Set Initial Theme
-if (currentTheme) {
-    document.documentElement.setAttribute('data-theme', currentTheme);
-    if (currentTheme === 'light') {
-        themeIcon.className = 'bx bx-moon';
-    }
+// Set Initial Theme (default to dark)
+document.documentElement.setAttribute('data-theme', currentTheme);
+if (currentTheme === 'light') {
+    themeIcon.className = 'bx bx-moon';
+} else {
+    themeIcon.className = 'bx bx-sun';
 }
 
 themeToggle.addEventListener('click', () => {
